@@ -7,6 +7,7 @@ dotenv.config();
 /* GET register page. */
 router.get("/:pot_id", potController.registerPot);
 
+/* POST register plant */
 router.post("/add", potController.registerPlant);
 
 module.exports = router;
