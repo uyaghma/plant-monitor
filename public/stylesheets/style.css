@@ -1,0 +1,376 @@
+/* Global Styles */
+html {
+  background-color: #f3fae9;
+  padding: 30px;
+}
+
+body {
+  font-family: "Trebuchet MS", sans-serif;
+  font-size: 28px; /* Increased for better readability */
+  line-height: 1.6;
+  color: #0f2a1d;
+  margin: 0 auto;
+  max-width: 980px;
+}
+
+h1,
+h2 {
+  color: #0f2a1d;
+  font-size: 2em; /* Increased */
+  margin: 0;
+}
+
+h3,
+h4 {
+  color: #e3eed4;
+  font-size: 1.5em; /* Increased */
+  margin: 0;
+}
+
+p {
+  margin: 0;
+  font-size: 1.2em; /* Slightly larger for readability */
+}
+
+a {
+  color: #00b7ff;
+  text-decoration: none;
+}
+
+/* Search Container */
+.search-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Increased for better spacing */
+  margin-top: 20px;
+}
+
+#plant-name {
+  width: auto;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 1.2em; /* Increased */
+}
+
+#pump {
+  padding: 10px 20px; /* Larger for tap comfort */
+  border: none;
+  color: #e3eed4;
+  background-color: #375534;
+  border-radius: 10px;
+  font-size: 1em; /* Increased */
+  cursor: pointer;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+#btn-search {
+  padding: 12px;
+  border: none;
+  color: #e3eed4;
+  background-color: #375534;
+  border-radius: 10px;
+  font-size: 1.2em; /* Increased */
+  cursor: pointer;
+}
+
+#btn-search:hover,
+#pump:hover {
+  background-color: #4c7249;
+}
+
+#btn-search:active,
+#pump:active {
+  background-color: #0f2a1d;
+}
+
+.plant-info-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  h1 {
+    margin-bottom: 15px;
+  }
+}
+
+/* Plant Container */
+#plant-container,
+.sensor-cards-container,
+#plant-cards-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px; /* Increased for larger viewport spacing */
+  margin-top: 20px;
+  justify-content: space-between;
+}
+
+.plant-card,
+.sensor-card,
+.home-plant-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  background-color: #4c7249;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  gap: 15px;
+  width: calc(50vw - 91px);
+  max-width: 438px;
+  height: 450px;
+}
+
+.home-plant-card {
+  height: 500px;
+}
+
+.alerts {
+  width: 100%;
+}
+
+.plant-card img,
+.home-plant-card img {
+  width: 250px; /* Larger images for bigger viewport */
+  height: 250px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.plant-card h3,
+.sensor-card h3,
+.home-plant-card h3 {
+  color: #e3eed4;
+  font-size: 1.2em; /* Increased */
+  margin-top: 10px;
+  flex-shrink: 0;
+}
+
+.plant-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 25px;
+  margin-bottom: 25px;
+  background-color: #689071;
+  padding: 20px;
+  border-radius: 15px;
+}
+
+.plant-header p {
+  font-size: 1em;
+}
+
+.plant-header img {
+  width: 300px;
+  height: 300px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.additional-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 15px;
+  width: calc(100vw - 440px);
+  max-width: 610px;
+}
+
+.sensor-card p {
+  color: #e3eed4;
+  font-size: 1.2em; /* Increased */
+  margin-top: 10px;
+  flex-shrink: 0;
+}
+
+.home-plant-card h2 {
+  color: #e3eed4;
+  font-size: 1.8em;
+}
+
+#select-plant-btn,
+#prev-alert,
+#next-alert,
+#back,
+#register {
+  padding: 15px 25px; /* Larger for tap comfort */
+  border: none;
+  color: #e3eed4;
+  background-color: #375534;
+  border-radius: 10px;
+  font-size: 1.2em; /* Increased */
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+#register,
+#back {
+  width: calc(50vw - 105px);
+  max-width: 438px;
+}
+
+#next-alert {
+  float: right;
+}
+
+#select-plant-btn:hover,
+#prev-alert:hover,
+#next-alert:hover,
+#back:hover,
+#register:hover {
+  background-color: #4c7249;
+}
+
+#select-plant-btn:active,
+#prev-alert:active,
+#next-alert:active,
+#back:active,
+#register:active {
+  background-color: #0f2a1d;
+}
+
+/* Selected Plant */
+#selected-plant {
+  margin-top: 30px;
+}
+
+.selected-plant {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px; /* Increased */
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #689071;
+}
+
+.selected-plant img {
+  width: 300px; /* Larger for readability */
+  height: 300px;
+  border-radius: 10px;
+}
+
+.selected-plant h3 {
+  color: #e3eed4;
+  font-size: 1.5em;
+}
+
+.selected-plant p {
+  font-size: 1.2em; /* Larger for readability */
+  color: #0f2a1d;
+}
+
+.welcome p {
+  font-size: 1.2em;
+}
+
+.alert-box-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px; /* Increased */
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background-color: #689071;
+  margin-top: 50px;
+  width: 75%;
+  p {
+    font-size: 1.1em;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+}
+
+.alert-header h2 {
+  color: #e3eed4;
+}
+
+.home-page {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.dash {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.plant-cards-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.weather p {
+  font-size: 1em;
+  text-align: right;
+}
+
+.plant-cards-header {
+  margin-top: 20px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+}
+
+.additional-info p {
+  font-size: 0.8em;
+}
+
+/* Media Queries */
+@media (max-width: 980px) {
+  body {
+    font-size: 34px; /* Larger for mobile at this width */
+    line-height: 1.8;
+  }
+
+  h1,
+  h2 {
+    font-size: 2em; /* More prominent headers */
+  }
+
+  h3,
+  h4 {
+    font-size: 1.7em; /* Adjusted */
+  }
+
+  p {
+    font-size: 1.6em; /* Enhanced for mobile readability */
+  }
+
+  #btn-search,
+  .select-plant-btn {
+    font-size: 1.4em; /* Larger buttons */
+    padding: 15px;
+  }
+
+  .plant-card img,
+  .selected-plant-card img {
+    max-width: 300px; /* Adjusted for mobile */
+  }
+}
+
+.carousel-item {
+  display: none;
+}
+.carousel-item.active {
+  display: block;
+}

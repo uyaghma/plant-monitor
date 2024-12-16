@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= plant.common_name %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+  <body>
+    <div class="plant-info-container">
+      <h1><%= plant.common_name %></h1>
+      <div class="plant-header">
+        <img
+          src="<%= plant.image %>"
+          alt="<%= plant.common_name %>"
+          class="plant-image"
+          width="300px"
+        />
+        <div class="additional-info">
+          <p>
+            <strong>Scientific Name:</strong> <%= plant.scientific_name || 'N/A'
+            %>
+          </p>
+          <p>
+            <strong>Watering:</strong> <%= plant.volume_water === "Unknown" ? ""
+            : plant.volume_water %> <%= plant.watering_guide %>
+          </p>
+          <p><strong>Sunlight:</strong> <%= plant.sunlight %></p>
+          <p>
+            <strong>Last Watered:</strong> <%= plant.last_watered || 'N/A' %>
+          </p>
+          <input id="pump" type="button" value="ON" />
+        </div>
+      </div>
+      <div class="sensor-cards-container"></div>
+    </div>
+    <script>
+      const pumpControl = document.getElementById("pump");
+
+      pumpControl.addEventListener("click", async () => {
+        const pumpAction = pumpControl.value === "ON" ? "on" : "off";
+        try {
+          await fetch(`/pump/${pumpAction}/<%=pot_id%>`, { method: "POST" });
+          pumpControl.value = pumpControl.value === "ON" ? "OFF" : "ON";
+        } catch (error) {
+          console.error("Cannot control pump: ", error);
+        }
+      });
+
+      const sensorUnits = {
+        soil_moisture: "%",
+        temperature: "°C",
+        water_level: "L",
+        humidity: "%",
+      };
+
+      // Thresholds for sensor-specific statuses
+      const sensorThresholds = {
+        soil_moisture: {
+          good: (value) => value >= 20 && value <= 60,
+          warning: (value) => value < 20 || value > 60,
+        },
+        temperature: {
+          good: (value) => value >= 15 && value <= 30,
+          warning: (value) => value < 15 || value > 30,
+        },
+        water_level: {
+          good: (value) => value >= 1,
+          warning: (value) => value < 1,
+        },
+        humidity: {
+          good: (value) => value >= 30 && value <= 60,
+          warning: (value) => value < 30 || value > 60,
+        },
+      };
+
+      // Helper function to determine sensor status
+      const determineSensorStatus = (key, value) => {
+        if (value === null) return "Unknown";
+        if (sensorThresholds[key]?.good(value)) return "Good";
+        if (sensorThresholds[key]?.warning(value)) return "Warning";
+        return "Unknown";
+      };
+
+      // Update DOM with sensor data
+      const updateSensorCards = (sensors) => {
+        const sensorContainer = document.querySelector(
+          ".sensor-cards-container"
+        );
+        sensorContainer.innerHTML = sensors
+          .map(
+            (sensor) => `
+              <div class="sensor-card">
+                <h3>${sensor.type}</h3>
+                <p style="font-size: 2.4em"><strong>${sensor.value} ${
+              sensor.unit
+            }</strong></p>
+                <p><strong>Status:</strong> <span class="status ${sensor.status.toLowerCase()}">${
+              sensor.status
+            }</span></p>
+                <p style="font-size: 0.5em"><small>Last Updated: ${
+                  sensor.last_updated
+                }</small></p>
+              </div>
+            `
+          )
+          .join("");
+      };
+
+      // Fetch and process sensor data
+      const fetchData = async () => {
+        try {
+          const response = await fetch("/sensor-data");
+          if (response.ok) {
+            const rawData = await response.json();
+            const sensors = Object.keys(sensorUnits).map((key) => {
+              const value = rawData[key] ?? null;
+              return {
+                type: key
+                  .replace(/_/g, " ")
+                  .replace(/\b\w/g, (char) => char.toUpperCase()),
+                value: value !== null ? value : "N/A",
+                unit: sensorUnits[key] ?? "",
+                status: determineSensorStatus(key, value),
+                last_updated: new Date().toLocaleString(),
+              };
+            });
+            updateSensorCards(sensors);
+          } else {
+            console.warn(`Unexpected response status: ${response.status}`);
+          }
+        } catch (error) {
+          console.error("Error fetching or updating sensor data:", error);
+        }
+      };
+
+      // Fetch data periodically
+      window.onload = fetchData;
+      setInterval(fetchData, 5000);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Register Plant</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+  <body>
+    <h1>Plant Registration</h1>
+    <h3>Pot ID: <%= pot_id %></h3>
+    <div class="search-container">
+      <input
+        type="text"
+        name="plant-field"
+        id="plant-name"
+        placeholder="Enter name of plant"
+      />
+      <input id="btn-search" type="button" value="Search" onclick="" />
+    </div>
+    <hr />
+    <div id="plant-container"></div>
+    <div id="selected-plant"></div>
+    <script>
+      let pot_id = "<%= pot_id %>";
+      let pot = "<%= data[0] %>";
+      console.log(pot_id, pot);
+      document
+        .getElementById("btn-search")
+        .addEventListener("click", async () => {
+          const searchBox = document.getElementById("plant-name");
+          let searchTerm = searchBox.value;
+
+          const response = await fetch(
+            `/plants?name=${encodeURIComponent(searchTerm)}`
+          );
+
+          if (response.ok) {
+            const data = await response.json();
+
+            const plants = data.data;
+            const plantContainer = document.getElementById("plant-container");
+            let html = "";
+
+            plants.forEach((plant) => {
+              html += `<div class="plant-card">
+                      <img
+                        src="${
+                          plant.default_image.original_url ||
+                          "https://via.placeholder.com/200"
+                        }"
+                        alt="${plant.common_name}"
+                      />
+                      <h3>${plant.common_name}</h3>
+                      <button id="select-plant-btn" data-id="${plant.id}">
+                        Select
+                      </button>
+                    </div>`;
+            });
+
+            plantContainer.innerHTML = html;
+
+            // Add event listeners to dynamically added buttons
+            document.querySelectorAll("#select-plant-btn").forEach((button) => {
+              button.addEventListener("click", (e) => {
+                const selectedPlant = e.target;
+                const plantId = selectedPlant.getAttribute("data-id");
+                let selected;
+
+                plants.forEach((plant) => {
+                  if (plantId == plant.id) {
+                    selected = plant;
+                  }
+                });
+
+                // Hide all plants
+                plantContainer.style.display = "none";
+
+                // Display the selected plant's details
+                const selectedPlantContainer =
+                  document.getElementById("selected-plant");
+                selectedPlantContainer.innerHTML = `
+                  <div class="selected-plant">
+                    <img src="${selected.default_image.original_url}" alt="${selected.common_name}" />
+                    <h3>${selected.common_name}</h3>
+                    <p>Scientific name: ${selected.scientific_name}</p>
+                    <p>Watering: ${selected.watering}</p>
+                    <p>Sunlight: ${selected.sunlight}</p>
+                    <div class="buttons">
+                      <input id="back" type="button" name="back_button" value="BACK"/>
+                      <input id="register" type="button" name="register_button" value="REGISTER"/>
+                    </div>
+                  </div>
+                `;
+                selectedPlantContainer.style.display = "";
+
+                document
+                  .getElementById("back")
+                  .addEventListener("click", () => {
+                    selectedPlantContainer.style.display = "none";
+                    plantContainer.style.display = "";
+                  });
+
+                document
+                  .getElementById("register")
+                  .addEventListener("click", async () => {
+                    const response = await fetch(`/register/add`, {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        pot_id: pot_id,
+                        plant_id: selected.id,
+                      }),
+                    });
+
+                    if (response.ok) {
+                      document.getElementById("selected-plant").innerHTML = `
+                                      ${selected.common_name} registered! Redirecting to the plant page!`;
+                      setTimeout(() => {
+                        window.location.href = `/plant/${pot_id}`;
+                      }, 2000);
+                    } else {
+                      alert("Failed to register the plant. Please try again.");
+                    }
+                  });
+              });
+            });
+          }
+        });
+    </script>
+  </body>
+</html>

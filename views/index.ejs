@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Welcome</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+  <body>
+    <div class="home-page">
+      <div class="dash">
+        <div class="welcome">
+          <h1 class="header">Welcome, <%= user %></h1>
+          <p class="date"><%= date %></p>
+        </div>
+        <div class="weather">
+          <p class="temp"><%= temp %></p>
+          <p class="weather-desc"><%= weather %></p>
+        </div>
+      </div>
+      <div
+        class="alert-box-container <%= alerts.length > 0 ? '' : 'neutral' %>"
+      >
+        <div class="alert-header header">
+          <h3><%= alerts.length > 0 ? "Alerts" : "No Alerts" %></h3>
+        </div>
+        <div class="alerts">
+          <% if (alerts.length > 0) { %>
+          <div class="carousel">
+            <% alerts.forEach((alert, index) => { %>
+            <div
+              class="carousel-item <%= alert.severity === 'high' ? 'red' : 'yellow' %> <%= index === 0 ? 'active' : '' %>"
+            >
+              <p><%= alert.message %></p>
+            </div>
+            <% }); %>
+          </div>
+          <div class="carousel-controls">
+            <button id="prev-alert">◀</button>
+            <button id="next-alert">▶</button>
+          </div>
+          <% } else { %>
+          <p>There are no alerts currently.</p>
+          <% } %>
+        </div>
+      </div>
+      <div class="plant-cards-header header">
+        <h2>Plants</h2>
+      </div>
+      <div id="plant-cards-container">
+        <% if (plants && plants.length > 0) { %> <% plants.forEach((plant) => {
+        %>
+        <div
+          class="home-plant-card"
+          onclick="window.location.href='/plant/<%= plant.id %>'"
+        >
+          <img src="<%=plant.image%>" alt="<%= plant.name %>" />
+          <h2><%= plant.name %></h2>
+          <span class="plant-status <%= plant.status.toLowerCase() %>">
+            <%= plant.status %>
+          </span>
+          <p style="font-size: 0.5em">
+            Last Watered: <%= plant.last_watered %>
+          </p>
+        </div>
+        <% }); %> <% } else { %>
+        <p>No plants available to display.</p>
+        <% } %>
+      </div>
+    </div>
+  </body>
+  <script>
+    function updateCarousel() {
+      alerts.forEach((alert, index) => {
+        alert.classList.toggle("active", index === currentIndex);
+      });
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+      const alerts = document.querySelectorAll(".carousel-item");
+      const prevButton = document.getElementById("prev-alert");
+      const nextButton = document.getElementById("next-alert");
+      let currentIndex = 0;
+
+      function updateCarousel() {
+        alerts.forEach((alert, index) => {
+          alert.classList.toggle("active", index === currentIndex);
+        });
+      }
+
+      prevButton.addEventListener("click", () => {
+        currentIndex = (currentIndex - 1 + alerts.length) % alerts.length;
+        updateCarousel();
+      });
+
+      nextButton.addEventListener("click", () => {
+        currentIndex = (currentIndex + 1) % alerts.length;
+        updateCarousel();
+      });
+
+      // Initialize the carousel
+      updateCarousel();
+    });
+  </script>
+</html>
