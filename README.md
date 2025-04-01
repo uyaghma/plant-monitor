@@ -27,12 +27,6 @@ An **eco-friendly, automated plant care solution** designed to optimize indoor p
 
 ---
 
-## 📷 System Overview  
-![System Diagram](https://via.placeholder.com/600x300)  
-*(Replace with an actual image of your system)*  
-
----
-
 ## 📖 How It Works  
 1. Sensors collect real-time environmental data.  
 2. Data is transmitted to the cloud using MQTT and stored in MongoDB.  
